@@ -27,3 +27,27 @@ This may not be the most popular SaaS boilerplate in terms of technologies used,
 - <b>Maintainable Software</b> - by using SOLID principles we insure that our code is easy to read and understand which in turn will allow you do add features, develop and ship your product to customers faster.
 
 - <b>Extendable Software</b> - by using a no-nonsense approach, coupled with modular architecture and the correct implementation of Design Patterns, extensibility is at the core of our product. The idea is to provide you with a product which you can easily extend with your own features before and after delivering it into production.
+
+## Technologies used
+
+### HTMX
+
+No-nonsense framework, easy and respects HATEOAS and REST.
+
+### TailwindCSS
+
+To create beautiful UI.
+
+### DaisyUI
+
+To create a beautiful product with amazing components
+
+### FastAPI
+
+Python backend
+
+### Jinja2 Templates
+
+To work with HTMX
+
+We will offer the possibility to use different backend technologies like GO and Rust. If you want others like Spring Boot or NextJS please open a ticket or feel free to contribute.
