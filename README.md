@@ -22,8 +22,8 @@ Reboot SAAS: The first SAAS project coded at Enterprise Level Quality
 
 ## This may not be the most popular SaaS boilerplate in terms of technologies used, but it is the fastest and most professionally built. The principles based on which this projects is built are principles brought from more than 20 years of developing Enterprise Software.
 
-    - Robust Software - by using proper unit and integration testing (which most SaaS boilerplate products don't do) we insure that whatever product you deliver using our SaaS boilerplate is stable and well tested and will allow you to have a safety net for when you add new features.
+- Robust Software - by using proper unit and integration testing (which most SaaS boilerplate products don't do) we insure that whatever product you deliver using our SaaS boilerplate is stable and well tested and will allow you to have a safety net for when you add new features.
 
-    - Maintainable Software - by using SOLID principles we insure that our code is easy to read and understand which in turn will allow you do add features, develop and ship your product to customers faster.
+- Maintainable Software - by using SOLID principles we insure that our code is easy to read and understand which in turn will allow you do add features, develop and ship your product to customers faster.
 
-    - Extendable Software - by using a no-nonsense approach, coupled with modular architecture and the correct implementation of Design Patterns, extensibility is at the core of our product. The idea is to provide you with a product which you can easily extend with your own features before and after delivering it into production.
+- Extendable Software - by using a no-nonsense approach, coupled with modular architecture and the correct implementation of Design Patterns, extensibility is at the core of our product. The idea is to provide you with a product which you can easily extend with your own features before and after delivering it into production.
