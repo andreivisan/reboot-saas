@@ -9,5 +9,5 @@ def home(request: Request):
     context = {
             "request": request
     }
-    response = templates.TemplateResponse("base.html", context)
+    response = templates.TemplateResponse("/authentication/pages/authenticate.html", context)
     return response

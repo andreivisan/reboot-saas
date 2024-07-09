@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Reboot SaaS</title>
+    <title>Reboot SaaS {{ title_page }}</title>
 
     <!-- DaisyUI CDN -->
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
@@ -11,9 +11,21 @@
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    {% block style %}
+    {% endblock style %}
 </head>
 
 <body>
-    <h1>Hello World</h1>
+    {% block header %}
+    {% endblock header %}
+
+    {% block content %}
+    {% endblock content%}
+
+    <!-- Set default theme to light -->
+    <script>
+      document.documentElement.setAttribute('data-theme', 'light');
+    </script>
 </body>
 </html>
