@@ -1,13 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from routers import authenticate, root
+from routers import authenticate, dashboard, root
 
 
 app = FastAPI()
 
 app.include_router(authenticate.router)
 app.include_router(root.router)
+app.include_router(dashboard.router)
 
 origins = [
     "http://localhost:3000", 
