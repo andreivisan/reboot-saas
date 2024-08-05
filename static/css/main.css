@@ -1,3 +1,7 @@
 #demo-chart {
   --color: #0284c7;
 } 
+
+#demo-chart caption {
+    margin-bottom: 12px;
+}
