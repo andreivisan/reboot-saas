@@ -51,3 +51,14 @@ Python backend
 To work with HTMX
 
 We will offer the possibility to use different backend technologies like GO and Rust. If you want others like Spring Boot or NextJS please open a ticket or feel free to contribute.
+
+## Implementation
+
+### Components
+
+There are 2 types of components inside the project:
+
+1. Client Components: example dasboard sliding sidebar. Since there is no data needed from the server this is just an html file imported as jinja template in the dashboard main page.
+
+2. Server Components: example dashboard home page -> data card, graph and data table. Since these components use data from the back-end I created
+a components folder that holds routes to components and serves these components with the required data.

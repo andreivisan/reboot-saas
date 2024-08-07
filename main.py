@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from routers import authenticate, dashboard, root
+from components import dashboard_components
 
 
 app = FastAPI()
@@ -9,6 +10,7 @@ app = FastAPI()
 app.include_router(authenticate.router)
 app.include_router(root.router)
 app.include_router(dashboard.router)
+app.include_router(dashboard_components.router)
 
 origins = [
     "http://localhost:3000", 
