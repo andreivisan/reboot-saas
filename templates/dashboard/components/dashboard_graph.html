@@ -1,0 +1,19 @@
+<table id="demo-chart" class="charts-css line show-data-on-hover show-labels show-primary-axis show-data-axes show-10-secondary-axes show-heading">
+    <caption>{{ graph_data.caption }}</caption> 
+    <thead>
+        <tr>
+            <th scope="col">Month</th> 
+            <th scope="col">Progress</th>
+        </tr>
+    </thead> 
+    <tbody>
+        {% for entry in graph_data.data %}
+        <tr>
+            <th scope="row">{{ entry.month }}</th> 
+            <td style="--start: {{ entry.start }}; --end: {{ entry.end }};">
+                <span class="data">{{ entry.progress }}</span>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
