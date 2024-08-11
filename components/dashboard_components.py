@@ -79,3 +79,19 @@ async def dashboard_data_graph(request: Request):
     response = templates.TemplateResponse("/dashboard/components/dashboard_graph.html", context)
     return response
 
+@router.get("/dashboard/components/data_table", response_class=HTMLResponse) 
+async def dashboard_data_table(request: Request):
+    table_data = {
+            "headers": ["Name", "Job", "Favorite Color"],
+            "rows": [
+                { "index": 1, "name": "Cy Ganderton", "job": "Quality Control Specialist", "favorite_color": "Blue" },
+                { "index": 2, "name": "Hart Hagerty", "job": "Desktop Support Technician", "favorite_color": "Purple" },
+                { "index": 3, "name": "Brice Swyre", "job": "Tax Accountant", "favorite_color": "Red" }
+            ]
+    }
+    context = {
+        "request": request,
+        "table_data": table_data
+    }
+    response = templates.TemplateResponse("/dashboard/components/dashboard_data_table.html", context)
+    return response

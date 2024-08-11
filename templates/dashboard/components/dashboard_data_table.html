@@ -1,0 +1,22 @@
+<div class="overflow-x-auto">
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                {% for header in table_data.headers %}
+                <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in table_data.rows %}
+            <tr>
+                <th>{{ row.index }}</th>
+                <td>{{ row.name }}</td>
+                <td>{{ row.job }}</td>
+                <td>{{ row.favorite_color }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
