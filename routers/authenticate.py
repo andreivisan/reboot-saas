@@ -1,10 +1,12 @@
 import os
+import json
 from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, Form, Request, Response
 from fastapi.responses import HTMLResponse
 from supabase import create_client, Client
 from . import templates
 from models.authentication.user import User
+from passlib.context import CryptContext
 
 router = APIRouter()
 load_dotenv()
@@ -12,6 +14,12 @@ load_dotenv()
 supabase_url = os.getenv("SUPABASE_URL")
 supabase_key = os.getenv("SUPABASE_KEY")
 supabase = create_client(supabase_url, supabase_key)
+
+# Password hashing context
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def __hashpass__(pwd: str):
+    return pwd_context.hash(pwd)
 
 @router.get("/authentication_page", response_class=HTMLResponse)
 def home(request: Request):
@@ -39,4 +47,15 @@ def render_register_form(request: Request):
 
 @router.post("/register", response_class=HTMLResponse)
 def register(request: Request, email: str = Form(...), password: str = Form(...)):
-    print(email + password)
+    pwd = __hashpass__(password)
+    # supabase signup
+    response = supabase.auth.sign_up({
+        "email": email,
+        "password": pwd
+    })
+    print(json.dumps(response.data, indent=2))
+    # user already registered
+
+# implement resend email
+
+
