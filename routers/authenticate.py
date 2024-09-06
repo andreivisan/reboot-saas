@@ -3,10 +3,12 @@ import json
 from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, Form, Request, Response
 from fastapi.responses import HTMLResponse
+from gotrue.errors import AuthApiError
 from supabase import create_client, Client
 from . import templates
 from models.authentication.user import User
 from passlib.context import CryptContext
+from passlib.hash import bcrypt
 
 router = APIRouter()
 load_dotenv()
@@ -48,14 +50,16 @@ def render_register_form(request: Request):
 @router.post("/register", response_class=HTMLResponse)
 def register(request: Request, email: str = Form(...), password: str = Form(...)):
     pwd = __hashpass__(password)
-    # supabase signup
-    response = supabase.auth.sign_up({
-        "email": email,
-        "password": pwd
-    })
-    print(json.dumps(response.data, indent=2))
-    # user already registered
-
-# implement resend email
+    try:
+        # supabase signup without email confirmation - disabled in Supabase
+        # if you want email confirmation code needs to be added below
+        response = supabase.auth.sign_up({
+            "email": email,
+            "password": pwd
+        })
+        print(response.session.access_token)
+    except AuthApiError as e:
+        if "User already registered" in str(e):
+            print("User already registered")
 
 

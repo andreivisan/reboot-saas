@@ -1,0 +1,26 @@
+{
+    "user": {
+        "id": "77f622aa-8d81-4ad8-8afd-4b24ce383a56",
+        "app_metadata": {
+            "provider": "email",
+            "providers": [
+                "email"
+            ]
+        },
+        "user_metadata": {
+            "email": "test@test.com",
+            "email_verified": false,
+            "phone_verified": false,
+            "sub": "77f622aa-8d81-4ad8-8afd-4b24ce383a56"
+        },
+        "aud": "authenticated",
+        "confirmation_sent_at": null,
+        "recovery_sent_at": null,
+        "email_change_sent_at": null,
+        "new_email": null,
+        "new_phone": null,
+        "invited_at": null,
+        "action_link": null,
+        "email": "test@test.com",
+        "phone": "",
+        "created_at": 
