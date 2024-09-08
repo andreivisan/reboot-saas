@@ -62,3 +62,14 @@ There are 2 types of components inside the project:
 
 2. Server Components: example dashboard home page -> data card, graph and data table. Since these components use data from the back-end I created
 a components folder that holds routes to components and serves these components with the required data.
+
+## Authentication
+
+In the FREE version Authentication is done using Supabase. In the NON-FREE version Authentication is done using local database. 
+For both versions user-password-JWT and Google and GitHub Auth are implemented.
+
+### Architecture
+
+For Supabase user-password-JWT auth the following architecture is implemented
+
+![Supabase Auth Architecture](/static/img/docs/auth_flow_bearer_supabase.png)
