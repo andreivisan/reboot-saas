@@ -1,5 +1,6 @@
 import os
 import json
+import bcrypt
 from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, Form, Request, Response
 from fastapi.responses import HTMLResponse
@@ -7,8 +8,6 @@ from gotrue.errors import AuthApiError
 from supabase import create_client, Client
 from . import templates
 from models.authentication.user import User
-from passlib.context import CryptContext
-from passlib.hash import bcrypt
 
 router = APIRouter()
 load_dotenv()
@@ -17,11 +16,13 @@ supabase_url = os.getenv("SUPABASE_URL")
 supabase_key = os.getenv("SUPABASE_KEY")
 supabase = create_client(supabase_url, supabase_key)
 
-# Password hashing context
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 def __hashpass__(pwd: str):
-    return pwd_context.hash(pwd)
+    salt = bcrypt.gensalt()
+    hashed_password =  bcrypt.hashpw(pwd.encode('utf-8'), salt)
+    return hashed_password.decode('utf-8')
+
+def __verifypass__(plain_pwd: str, hashed_pwd: str):
+    pass
 
 @router.get("/authentication_page", response_class=HTMLResponse)
 def home(request: Request):
@@ -50,6 +51,7 @@ def render_register_form(request: Request):
 @router.post("/register", response_class=HTMLResponse)
 def register(request: Request, email: str = Form(...), password: str = Form(...)):
     pwd = __hashpass__(password)
+    print(pwd)
     try:
         # supabase signup without email confirmation - disabled in Supabase
         # if you want email confirmation code needs to be added below
