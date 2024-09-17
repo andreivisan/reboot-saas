@@ -16,12 +16,12 @@ supabase_url = os.getenv("SUPABASE_URL")
 supabase_key = os.getenv("SUPABASE_KEY")
 supabase = create_client(supabase_url, supabase_key)
 
-def __hashpass__(pwd: str):
+def _hashpass(pwd: str):
     salt = bcrypt.gensalt()
     hashed_password =  bcrypt.hashpw(pwd.encode('utf-8'), salt)
     return hashed_password.decode('utf-8')
 
-def __verifypass__(plain_pwd: str, hashed_pwd: str):
+def _verifypass(plain_pwd: str, hashed_pwd: str):
     pass
 
 @router.get("/authentication_page", response_class=HTMLResponse)
@@ -60,8 +60,23 @@ def register(request: Request, email: str = Form(...), password: str = Form(...)
             "password": pwd
         })
         print(response.session.access_token)
+
+        # redirect to the login page
     except AuthApiError as e:
         if "User already registered" in str(e):
             print("User already registered")
+        # return registration page with error
+
+@router.post("/login", response_class=HTMLResponse)
+def login(request: Request, email: str = Form(...), password: str = Form(...)):
+    # login process
+
+    # if successful send access_token as HTML only cookie
+
+    # if successful send refresh_token as HTML only cookie
+
+    # redirect the user to the dashboard page
+
+    pass
 
 

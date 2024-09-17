@@ -1,19 +1,19 @@
 aiohappyeyeballs==2.4.0
 aiohttp==3.10.5
 aiosignal==1.3.1
-annotated-types==0.6.0
+annotated-types @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_1fa2djihwb/croot/annotated-types_1709542925772/work
 anyio==4.3.0
 attrs==24.2.0
 bcrypt==4.2.0
 certifi==2024.7.4
-click==8.1.7
+click @ file:///Users/builder/cbouss/perseverance-python-buildout/croot/click_1699237822453/work
 deprecation==2.1.0
 dnspython==2.6.1
 email_validator==2.2.0
 fastapi==0.110.0
 frozenlist==1.4.1
 gotrue==2.7.0
-h11==0.14.0
+h11 @ file:///private/var/folders/k1/30mswbxs7r1g6zwn8y4fyt500000gp/T/abs_110bmw2coo/croot/h11_1706652289620/work
 h2==4.1.0
 hpack==4.0.0
 httpcore==1.0.5
@@ -28,6 +28,7 @@ passlib==1.7.4
 postgrest==0.16.11
 pydantic==2.6.3
 pydantic_core==2.16.3
+PyJWT==2.9.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 python-multipart==0.0.9
