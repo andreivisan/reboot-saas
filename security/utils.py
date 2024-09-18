@@ -2,7 +2,7 @@ import os
 import jwt
 from dotenv import load_dotenv
 from jwt import PyJWTError, ExpiredSignatureError
-from fastapi import Depends, Request
+from fastapi import Depends, Request, HTTPException
 from fastapi.responses import RedirectResponse
 from security.oauth2_supabase import OAuth2CookieBearer
 
@@ -57,10 +57,7 @@ def get_current_user(request: Request, token: str = Depends(oauth2_scheme)):
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid token payload",
             )
-        # TODO place response in a middleware as we are not allowed to modify it here
-        response = RedirectResponse(url=request.url.path, status_code=HTTP_303_SEE_OTHER)
-        response.set_cookie(key="access_token", value=new_access_token, httponly=True, secure=True, samesite="lax")
-        response.set_cookie(key="refresh_token", value=new_refresh_token, httponly=True, secure=True, samesite="lax")
+        request.state.new_tokens = (new_access_token, new_refresh_token)
         return user_id
     except PyJWTError:
         raise HTTPException(
