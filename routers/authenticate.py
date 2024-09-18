@@ -46,23 +46,56 @@ def register(request: Request, email: str = Form(...), password: str = Form(...)
         # if you want email confirmation code needs to be added below
         response = supabase.auth.sign_up({
             "email": email,
-            "password": pwd
+            "password": password
         })
+        return RedirectResponse(url="/login_form", status_code=303)
     except AuthApiError as e:
-        if "User already registered" in str(e):
-            print("User already registered")
-        # return registration form page with error
+        error_message = str(e)
+        if "User already registered" in error_message:
+            error = "User already registered"
+        else:
+            error = "Registration failed. Please try again."
+        context = {
+            "request": request,
+            "error": error
+        }
+        return templates.TemplateResponse("/authentication/fragments/register_form.html", context)
 
 @router.post("/login", response_class=HTMLResponse)
 def login(request: Request, email: str = Form(...), password: str = Form(...)):
-    # login process
-
-    # if successful send access_token as HTML only cookie
-
-    # if successful send refresh_token as HTML only cookie
-
-    # redirect the user to the dashboard page
-
-    pass
-
+    try:
+        response = supabase.auth.sign_in_with_password({
+            "email": email,
+            "password": password
+        })
+        if response.session is None:
+            raise AuthApiError("Authentication failed")
+        # retrieve tokens from session
+        access_token = response.session.access_token
+        refresh_token = response.session.refresh_token
+        # if login successful redirect to /dashboard
+        # also attach a cookie for each of the tokens
+        redirect_response = RedirectResponse(url="/dashboard", status_code=303)
+        redirect_response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=True,
+            secure=True,
+            samesite="lax"
+        )
+        redirect_response.set_cookie(
+            key="refresh_token",
+            value=refresh_token,
+            httponly=True,
+            secure=True,
+            samesite="lax"
+        )
+        return redirect_response
+    except AuthApiError as e:
+        error = "Invalid email or password. Please try again."
+        context = {
+            "request": request,
+            "error": error
+        }
+        return template.TemplateResponse("/authentication/fragments/login_form.html", context)
 

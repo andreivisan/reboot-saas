@@ -2,15 +2,20 @@ import os
 import jwt
 from dotenv import load_dotenv
 from jwt import PyJWTError, ExpiredSignatureError
-from fastapi import Depends, Request, HTTPException
-from fastapi.responses import RedirectResponse
+from fastapi import Depends, Request, HTTPException, status
 from security.oauth2_supabase import OAuth2CookieBearer
+from supabase import create_client
 
-oath2_scheme = OAuth2CookieBearer(tokenUrl="/login")
+oauth2_scheme = OAuth2CookieBearer(tokenUrl="/login")
 load_dotenv()
+
+supabase_url = os.getenv("SUPABASE_URL")
+supabase_key = os.getenv("SUPABASE_KEY")
+supabase = create_client(supabase_url, supabase_key)
 
 JWT_SECRET = os.getenv("SUPABASE_JWT_SECRET")
 JWT_ALGORITHM = "HS256"
+AUDIENCE = "authenticated"
 
 def _refresh_access_token(request:Request):
     refresh_token = request.cookies.get('refresh_token')
@@ -38,7 +43,7 @@ def get_current_user(request: Request, token: str = Depends(oauth2_scheme)):
             headers={"WWW-Authenticate": "Bearer"},
         )
     try:
-        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM], audience=AUDIENCE)
         print(f'JWT Payload: {payload}')
         user_id: str = payload.get('sub')
         if user_id is None:
@@ -50,7 +55,7 @@ def get_current_user(request: Request, token: str = Depends(oauth2_scheme)):
     except ExpiredSignatureError:
         # deal with token refresh
         new_access_token, new_refresh_token = _refresh_access_token(request)
-        new_payload = jwt.decode(new_access_token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        new_payload = jwt.decode(new_access_token, JWT_SECRET, algorithms=[JWT_ALGORITHM], audience=AUDIENCE)
         user_id = new_payload.get('sub')
         if user_id is None:
             raise HTTPException(
@@ -59,7 +64,8 @@ def get_current_user(request: Request, token: str = Depends(oauth2_scheme)):
             )
         request.state.new_tokens = (new_access_token, new_refresh_token)
         return user_id
-    except PyJWTError:
+    except PyJWTError as e:
+        print(e)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid access token",

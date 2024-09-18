@@ -1,6 +1,6 @@
 from fastapi.security import OAuth2
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
-from fastapi import Request
+from fastapi import Request, status
 from fastapi.security.utils import get_authorization_scheme_param
 from fastapi import HTTPException
 from fastapi import status
@@ -24,16 +24,13 @@ class OAuth2CookieBearer(OAuth2):
     async def __call__(self, request: Request) -> Optional[str]:
         authorization: str = request.cookies.get('access_token')
         
-        print(f'OAuth2CookieBearer authorization: {authorization}')
-
-        scheme, param = get_authorization_scheme_param(authorization)
-        if not authorization or scheme.lower() != "bearer":
+        if not authorization:
             if self.auto_error:
                 raise HTTPException(
-                    status_code=HTTP_401_UNAUTHORIZED,
+                    status_code=status.HTTP_401_UNAUTHORIZED,
                     detail="Not authenticated",
                     headers={"WWW-Authenticate": "Bearer"},
                 )
             else:
                 return None
-        return param
+        return authorization

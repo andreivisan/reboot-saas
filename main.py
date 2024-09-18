@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from middleware.refresh_tolen_middleware import refresh_token_middleware
+from middleware.refresh_token_middleware import refresh_token_middleware
 from routers import authenticate, dashboard, root
 from components import dashboard_components
 
