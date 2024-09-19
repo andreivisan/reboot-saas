@@ -17,24 +17,26 @@ JWT_SECRET = os.getenv("SUPABASE_JWT_SECRET")
 JWT_ALGORITHM = "HS256"
 AUDIENCE = "authenticated"
 
-def _refresh_access_token(request:Request):
+async def _refresh_access_token(request:Request):
     refresh_token = request.cookies.get('refresh_token')
     if not refresh_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not authenticated",
         )
-    response = supabase.auth.refresh_session(refresh_token)
-    if 'error' in response:
+    try:
+        response = supabase.auth.refresh_session(refresh_token)
+        new_access_token = response.session.access_token
+        new_refresh_token = response.session.refresh_token
+        return new_access_token, new_refresh_token
+    except Exception as e:
+        print(f"Error refreshing token: {e}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated",
+            detail="Failed to refresh token",
         )
-    new_access_token = response.session.access_token
-    new_refresh_token = response.session.refresh_token
-    return new_access_token, new_refresh_token
 
-def get_current_user(request: Request, token: str = Depends(oauth2_scheme)):
+async def get_current_user(request: Request, token: str = Depends(oauth2_scheme)):
     if not token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -53,7 +55,7 @@ def get_current_user(request: Request, token: str = Depends(oauth2_scheme)):
         return user_id
     except ExpiredSignatureError:
         # deal with token refresh
-        new_access_token, new_refresh_token = _refresh_access_token(request)
+        new_access_token, new_refresh_token = await _refresh_access_token(request)
         new_payload = jwt.decode(new_access_token, JWT_SECRET, algorithms=[JWT_ALGORITHM], audience=AUDIENCE)
         user_id = new_payload.get('sub')
         if user_id is None:
