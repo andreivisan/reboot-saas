@@ -25,14 +25,13 @@ def _refresh_access_token(request:Request):
             detail="Not authenticated",
         )
     response = supabase.auth.refresh_session(refresh_token)
-    print(f'Supabase refresh session response: {response}')
     if 'error' in response:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not authenticated",
         )
     new_access_token = response.session.access_token
-    new_refresh_token = response.session.response_token
+    new_refresh_token = response.session.refresh_token
     return new_access_token, new_refresh_token
 
 def get_current_user(request: Request, token: str = Depends(oauth2_scheme)):
