@@ -31,6 +31,7 @@ async def _refresh_access_token(request:Request):
         return new_access_token, new_refresh_token
     except Exception as e:
         print(f"Error refreshing token: {e}")
+        # if the refresh token is expired redirect to login page
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Failed to refresh token",
