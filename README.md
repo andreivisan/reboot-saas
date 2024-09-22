@@ -73,3 +73,11 @@ For both versions user-password-JWT and Google and GitHub Auth are implemented.
 For Supabase user-password-JWT auth the following architecture is implemented
 
 ![Supabase Auth Architecture](/static/img/docs/auth_flow_bearer_supabase.png)
+
+#### Access and Refresh token with Supabase
+
+In order to have a good authentication user experience make sure you set the access and refresh token timeout accordingly. Once the access token expires
+a new request for a new access and refresh token is made. If the refresh token is expired too, the user will be redirected to the login page.
+So make sure to set a low timeout for the access token and for the refresh token set in as long as you want the user to use the app without having
+to login again.
+
