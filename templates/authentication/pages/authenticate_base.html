@@ -2,6 +2,7 @@
 
 {% block content %}
 <div id="auth-form" class="flex w-full min-h-screen">
-    {% include 'authentication/fragments/login_form.html' %}
+    {% block auth_form %}
+    {% endblock auth_form %}
 </div>
 {% endblock content %}

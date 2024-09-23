@@ -15,15 +15,7 @@ supabase_url = os.getenv("SUPABASE_URL")
 supabase_key = os.getenv("SUPABASE_KEY")
 supabase = create_client(supabase_url, supabase_key)
 
-@router.get("/authentication_page", response_class=HTMLResponse)
-def home(request: Request):
-    context = {
-            "request": request
-    }
-    response = templates.TemplateResponse("/authentication/pages/authenticate.html", context)
-    return response
-
-@router.get("/login_form", response_class=HTMLResponse)
+@router.get("/login", response_class=HTMLResponse)
 def render_login_form(request: Request):
     context = {
             "request": request
@@ -31,7 +23,7 @@ def render_login_form(request: Request):
     response = templates.TemplateResponse("/authentication/fragments/login_form.html", context)
     return response
 
-@router.get("/register_form", response_class=HTMLResponse)
+@router.get("/register", response_class=HTMLResponse)
 def render_register_form(request: Request):
     context = {
             "request": request
@@ -48,7 +40,10 @@ def register(request: Request, email: str = Form(...), password: str = Form(...)
             "email": email,
             "password": password
         })
-        return RedirectResponse(url="/login_form", status_code=303)
+        context = {
+            "request": request
+        }
+        return template.TemplateResponse("/authentication/fragments/login_form.html", context)
     except AuthApiError as e:
         error_message = str(e)
         if "User already registered" in error_message:
