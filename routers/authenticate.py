@@ -20,7 +20,7 @@ def render_login_form(request: Request):
     context = {
             "request": request
     }
-    response = templates.TemplateResponse("/authentication/fragments/login_form.html", context)
+    response = templates.TemplateResponse("/authentication/pages/login_form.html", context)
     return response
 
 @router.get("/register", response_class=HTMLResponse)
@@ -28,7 +28,7 @@ def render_register_form(request: Request):
     context = {
             "request": request
     }
-    response = templates.TemplateResponse("/authentication/fragments/register_form.html", context)
+    response = templates.TemplateResponse("/authentication/pages/register_form.html", context)
     return response
 
 @router.post("/register")
@@ -43,7 +43,7 @@ def register(request: Request, email: str = Form(...), password: str = Form(...)
         context = {
             "request": request
         }
-        return template.TemplateResponse("/authentication/fragments/login_form.html", context)
+        return templates.TemplateResponse("/authentication/pages/login_form.html", context)
     except AuthApiError as e:
         error_message = str(e)
         if "User already registered" in error_message:
@@ -54,7 +54,7 @@ def register(request: Request, email: str = Form(...), password: str = Form(...)
             "request": request,
             "error": error
         }
-        return templates.TemplateResponse("/authentication/fragments/register_form.html", context)
+        return templates.TemplateResponse("/authentication/pages/register_form.html", context)
 
 @router.post("/login", response_class=HTMLResponse)
 def login(request: Request, email: str = Form(...), password: str = Form(...)):
@@ -92,5 +92,5 @@ def login(request: Request, email: str = Form(...), password: str = Form(...)):
             "request": request,
             "error": error
         }
-        return template.TemplateResponse("/authentication/fragments/login_form.html", context)
+        return templates.TemplateResponse("/authentication/pages/login_form.html", context)
 
