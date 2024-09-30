@@ -40,10 +40,8 @@ def register(request: Request, email: str = Form(...), password: str = Form(...)
             "email": email,
             "password": password
         })
-        context = {
-            "request": request
-        }
-        return templates.TemplateResponse("/authentication/pages/login_form.html", context)
+        redirect_response = RedirectResponse(url="/login", status_code=302)
+        return redirect_response
     except AuthApiError as e:
         error_message = str(e)
         if "User already registered" in error_message:
