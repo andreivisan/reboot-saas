@@ -1,7 +1,7 @@
 {% extends "/authentication/pages/authenticate_base.html" %}
 
 {% block auth_form %}
-    <div class="flex w-full min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div class="flex w-full min-h-full flex-col justify-center px-6 py-12 lg:px-8" x-data="{ showModal: {{ 'true' if error else 'false' }} }">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
             <a hx-get="/" hx-target="body" hx-push-url="true" class="cursor-pointer">
                 <img class="mx-auto h-30 w-auto" src="static/img/logos/logo_reboot_light.svg" alt="Reboot SaaS">
@@ -46,6 +46,18 @@
                 Already a member?
                 <a hx-get="/login" hx-target="#auth-form" hx-swap="innerHTML" hx-replace-url="true" class="font-semibold leading-6 text-sky-600 hover:text-sky-500 cursor-pointer">Login</a>
             </p>
+        </div>
+
+        <!-- Modal controlled by AlpineJS -->
+        <div x-show="showModal" id="error-modal" class="fixed inset-0 flex items-center justify-center z-50">
+            <div class="bg-black bg-opacity-50 absolute inset-0"></div>
+            <div class="bg-white rounded-lg p-6 relative z-10 w-1/3">
+                <h2 class="text-xl font-semibold mb-4">Error</h2>
+                <p>{{ error }}</p>
+                <button @click="showModal = false" class="bg-blue-500 text-white px-4 py-2 rounded">
+                    OK
+                </button>
+            </div>
         </div>
     </div>
 {% endblock auth_form %}
