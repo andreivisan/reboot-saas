@@ -17,19 +17,31 @@ supabase = create_client(supabase_url, supabase_key)
 
 @router.get("/login", response_class=HTMLResponse)
 def render_login_form(request: Request):
-    context = {
-            "request": request
-    }
-    response = templates.TemplateResponse("/authentication/pages/login_form.html", context)
-    return response
+    if request.headers.get("HX-Request"):
+        # If the request comes from HTMX, return an HX-Redirect header
+        redirect_response = Response(status_code=200)
+        redirect_response.headers["HX-Redirect"] = "/login"
+        return redirect_response
+    else:
+        context = {
+                "request": request
+        }
+        response = templates.TemplateResponse("/authentication/pages/login_form.html", context)
+        return response
 
 @router.get("/register", response_class=HTMLResponse)
 def render_register_form(request: Request):
-    context = {
-            "request": request
-    }
-    response = templates.TemplateResponse("/authentication/pages/register_form.html", context)
-    return response
+    if request.headers.get("HX-Request"):
+        # If the request comes from HTMX, return an HX-Redirect header
+        redirect_response = Response(status_code=200)
+        redirect_response.headers["HX-Redirect"] = "/register"
+        return redirect_response
+    else:
+        context = {
+                "request": request
+        }
+        response = templates.TemplateResponse("/authentication/pages/register_form.html", context)
+        return response
 
 @router.post("/register")
 def register(request: Request, email: str = Form(...), password: str = Form(...)):

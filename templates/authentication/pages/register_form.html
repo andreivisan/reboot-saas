@@ -47,17 +47,6 @@
                 <a hx-get="/login" hx-target="#auth-form" hx-swap="innerHTML" hx-replace-url="true" class="font-semibold leading-6 text-sky-600 hover:text-sky-500 cursor-pointer">Login</a>
             </p>
         </div>
-
-        <!-- Modal controlled by AlpineJS -->
-        <div x-show="showModal" id="error-modal" class="fixed inset-0 flex items-center justify-center z-50">
-            <div class="bg-black bg-opacity-50 absolute inset-0"></div>
-            <div class="bg-white rounded-lg p-6 relative z-10 w-1/3">
-                <h2 class="text-xl font-semibold mb-4">Error</h2>
-                <p>{{ error }}</p>
-                <button @click="showModal = false" class="bg-blue-500 text-white px-4 py-2 rounded">
-                    OK
-                </button>
-            </div>
-        </div>
+        {% include 'authentication/fragments/error_modal.html'  %}
     </div>
 {% endblock auth_form %}

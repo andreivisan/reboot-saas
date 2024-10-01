@@ -1,7 +1,7 @@
 {% extends "/authentication/pages/authenticate_base.html" %}
 
 {% block auth_form %}
-    <div class="flex w-full min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div class="flex w-full min-h-full flex-col justify-center px-6 py-12 lg:px-8" x-data="{ showModal: {{ 'true' if error else 'false' }} }">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
             <a hx-get="/" hx-target="body" hx-push-url="true" class="cursor-pointer">
                 <img class="mx-auto h-30 w-auto" src="static/img/logos/logo_reboot_light.svg" alt="Reboot SaaS">
@@ -44,6 +44,7 @@
             <a hx-get="/register" hx-target="#auth-form" hx-swap="innerHTML" hx-replace-url="true" class="font-semibold leading-6 text-sky-600 hover:text-sky-500 cursor-pointer">Register</a>
             </p>
         </div>
+        {% include 'authentication/fragments/error_modal.html'  %}
     </div>
 {% endblock auth_form %}
 
