@@ -5,3 +5,7 @@
 #demo-chart caption {
     margin-bottom: 12px;
 }
+
+[x-cloak] {
+    display: none !important;
+}
