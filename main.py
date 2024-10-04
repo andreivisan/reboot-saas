@@ -1,10 +1,15 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from logging_config import setup_logging, get_logger
 from middleware.refresh_token_middleware import refresh_token_middleware
 from routers import authenticate, dashboard, root
 from components import dashboard_components
 
+
+# Setup logging
+log_file = "logs/app.log"
+logger = setup_logging(log_file, "INFO")
 
 app = FastAPI()
 

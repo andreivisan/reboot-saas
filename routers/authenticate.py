@@ -6,6 +6,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from gotrue.errors import AuthApiError
 from supabase import create_client, Client
 from . import templates
+from . import logger
 from models.authentication.user import User
 
 router = APIRouter()
@@ -52,10 +53,16 @@ def register(request: Request, email: str = Form(...), password: str = Form(...)
             "email": email,
             "password": password
         })
+        user_profile = {
+            "uuid": response.user.id,
+            "email": response.user.email
+        }
+        supabase.table("users").insert(user_profile).execute()
         redirect_response = RedirectResponse(url="/login", status_code=302)
         return redirect_response
     except AuthApiError as e:
         error_message = str(e)
+        logger.error(error_message)
         if "User already registered" in error_message:
             error = "User already registered"
         else:
