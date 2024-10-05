@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from logging_config import setup_logging, get_logger
 from middleware.refresh_token_middleware import refresh_token_middleware
+from middleware.redirect_middleware import redirect_middleware
 from routers import authenticate, dashboard, root
 from components import dashboard_components
 
@@ -14,6 +15,7 @@ logger = setup_logging(log_file, "INFO")
 app = FastAPI()
 
 app.middleware("http")(refresh_token_middleware)
+app.middleware("http")(redirect_middleware)
 
 app.include_router(authenticate.router)
 app.include_router(root.router)
