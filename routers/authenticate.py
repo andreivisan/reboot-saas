@@ -1,20 +1,13 @@
-import os
 import json
-from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, Form, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from gotrue.errors import AuthApiError
-from supabase import create_client, Client
 from . import templates
 from . import logger
+from . import supabase
 from models.authentication.user import User
 
 router = APIRouter()
-load_dotenv()
-
-supabase_url = os.getenv("SUPABASE_URL")
-supabase_key = os.getenv("SUPABASE_KEY")
-supabase = create_client(supabase_url, supabase_key)
 
 @router.get("/login", response_class=HTMLResponse)
 def render_login_form(request: Request):
@@ -57,7 +50,8 @@ def register(request: Request, email: str = Form(...), password: str = Form(...)
             "uuid": response.user.id,
             "email": response.user.email
         }
-        supabase.table("users").insert(user_profile).execute()
+        supabase.table("user_profile").insert(user_profile).execute()
+        logger.info("User successfully registered and saved to DB")
         redirect_response = RedirectResponse(url="/login", status_code=302)
         return redirect_response
     except AuthApiError as e:
