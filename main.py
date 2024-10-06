@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from logging_config import setup_logging, get_logger
@@ -6,6 +6,7 @@ from middleware.refresh_token_middleware import refresh_token_middleware
 from middleware.redirect_middleware import redirect_middleware
 from routers import authenticate, dashboard, root
 from components import dashboard_components
+from exception.http_exception import custom_http_exception_handler
 
 
 # Setup logging
@@ -16,6 +17,8 @@ app = FastAPI()
 
 app.middleware("http")(refresh_token_middleware)
 app.middleware("http")(redirect_middleware)
+
+app.add_exception_handler(HTTPException, custom_http_exception_handler)
 
 app.include_router(authenticate.router)
 app.include_router(root.router)

@@ -6,6 +6,7 @@ from . import templates
 from . import logger
 from . import supabase
 from models.authentication.user import User
+from security.utils import get_current_user
 
 router = APIRouter()
 
@@ -36,6 +37,16 @@ def render_register_form(request: Request):
         }
         response = templates.TemplateResponse("/authentication/pages/register_form.html", context)
         return response
+
+@router.get("/logout", response_class=HTMLResponse)
+async def logout(request: Request, response: Response, user_id: str = Depends(get_current_user)):
+    context = {
+                "request": request
+    }
+    response = templates.TemplateResponse("/authentication/pages/login_form.html", context)
+    response.delete_cookie("access_token")
+    response.delete_cookie("refresh_token")
+    return response
 
 @router.post("/register")
 def register(request: Request, email: str = Form(...), password: str = Form(...)):

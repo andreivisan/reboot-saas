@@ -2,7 +2,7 @@ import os
 import jwt
 from dotenv import load_dotenv
 from jwt import PyJWTError, ExpiredSignatureError
-from fastapi import Depends, Request, HTTPException, status
+from fastapi import Depends, Request, Response, HTTPException, status
 from security.oauth2_supabase import OAuth2CookieBearer
 from supabase import create_client
 from . import logger
@@ -18,13 +18,16 @@ JWT_SECRET = os.getenv("SUPABASE_JWT_SECRET")
 JWT_ALGORITHM = "HS256"
 AUDIENCE = "authenticated"
 
+def _handle_authentication_failure():
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Not authenticated",
+    )
+
 async def _refresh_access_token(request:Request):
     refresh_token = request.cookies.get('refresh_token')
     if not refresh_token:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated",
-        )
+       _handle_authentication_failure() 
     try:
         response = supabase.auth.refresh_session(refresh_token)
         new_access_token = response.session.access_token
@@ -32,13 +35,12 @@ async def _refresh_access_token(request:Request):
         return new_access_token, new_refresh_token
     except Exception as e:
         logger.error(f"Error refreshing token: {e}")
-        # if the refresh token is expired redirect to login page
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Failed to refresh token",
-        )
+        _handle_authentication_failure() 
 
-async def get_current_user(request: Request, token: str = Depends(oauth2_scheme)):
+async def get_current_user(
+        request: Request,
+        response: Response,
+        token: str = Depends(oauth2_scheme)):
     if not token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
