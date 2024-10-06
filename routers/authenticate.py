@@ -19,7 +19,7 @@ def render_login_form(request: Request):
         return redirect_response
     else:
         context = {
-                "request": request
+            "request": request
         }
         response = templates.TemplateResponse("/authentication/pages/login_form.html", context)
         return response
@@ -33,19 +33,50 @@ def render_register_form(request: Request):
         return redirect_response
     else:
         context = {
-                "request": request
+            "request": request
         }
         response = templates.TemplateResponse("/authentication/pages/register_form.html", context)
         return response
 
 @router.get("/logout", response_class=HTMLResponse)
 async def logout(request: Request, response: Response, user_id: str = Depends(get_current_user)):
+    supabase_response = supabase.auth.sign_out()
     context = {
-                "request": request
+        "request": request
     }
     response = templates.TemplateResponse("/authentication/pages/login_form.html", context)
     response.delete_cookie("access_token")
     response.delete_cookie("refresh_token")
+    return response
+
+@router.get("/reset_pass_input_email")
+async def reset_pass_input_email(request: Request):
+    context = {
+        "request": request,
+        "error": False
+    }
+    response = templates.TemplateResponse("/authentication/pages/reset_pass_input_email.html", context)
+    return response
+
+@router.post("/reset_pass_send_email")
+async def reset_password(request: Request, email: str):
+    # First verify if the email is in DB
+    supabase.auth.reset_password_for_email(email, {
+        "redirect_to": "http://localhost:8000/reset_password_form",
+    })
+    context = {
+        "request": request
+    }
+    response = templates.TemplateResponse("/authentication/pages/reset_password.html", context)
+    return response
+
+
+@router.get("/reset_password_form")
+async def reset_password_form(request: Request):
+    context = {
+        "request": request    
+    }
+    response = templates.TemplateResponse("/authentication/pages/reset_password_form.html", context)
     return response
 
 @router.post("/register")

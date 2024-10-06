@@ -1,10 +1,12 @@
  <!-- Modal controlled by AlpineJS -->
  <div x-show="showModal" 
-      x-cloak id="error-modal" 
+      x-cloak 
+      id="error-modal" 
       x-transition.opacity.duration.200ms 
       x-trap.inert.noscroll="showModal" 
       @keydown.esc.window="showModal" 
       @click.self="showModal = false" 
+      hx-swap-oob="true"
       class="fixed 
              inset-0 
              z-30 

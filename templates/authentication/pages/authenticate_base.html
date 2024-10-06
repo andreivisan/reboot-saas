@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div id="auth-form" class="flex w-full min-h-screen">
+<div id="auth-form" hx-swap-oob="true" class="flex w-full min-h-screen">
     {% block auth_form %}
     {% endblock auth_form %}
 </div>
