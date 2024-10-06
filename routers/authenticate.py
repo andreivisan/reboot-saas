@@ -59,25 +59,18 @@ async def reset_pass_input_email(request: Request):
     return response
 
 @router.post("/reset_pass_send_email")
-async def reset_password(request: Request, email: str):
-    # First verify if the email is in DB
-    supabase.auth.reset_password_for_email(email, {
-        "redirect_to": "http://localhost:8000/reset_password_form",
+async def reset_password(request: Request, email: str = Form(...)):
+    user_data = supabase.table("user_profile").select("*").eq("email", email).execute()
+    if not user_data.data:
+        logger.warn(f"User with email {email} not found")
+        context = {
+            "request": request,
+            "error": "User email not found"
+        }
+        return templates.TemplateResponse("/authentication/pages/reset_pass_input_email.html", context)
+    supabase.auth.reset_password_email(email, {
+        "redirect_to": "https://example.com/update-password",
     })
-    context = {
-        "request": request
-    }
-    response = templates.TemplateResponse("/authentication/pages/reset_password.html", context)
-    return response
-
-
-@router.get("/reset_password_form")
-async def reset_password_form(request: Request):
-    context = {
-        "request": request    
-    }
-    response = templates.TemplateResponse("/authentication/pages/reset_password_form.html", context)
-    return response
 
 @router.post("/register")
 def register(request: Request, email: str = Form(...), password: str = Form(...)):

@@ -3,7 +3,13 @@ from fastapi.responses import RedirectResponse, Response
 from . import logger
 
 async def redirect_middleware(request: Request, call_next):
-    public_routes_exact = ["/", "/login", "/register", "/reset_pass_input_email"]
+    public_routes_exact = [
+            "/", 
+            "/login", 
+            "/register", 
+            "/reset_pass_input_email", 
+            "/reset_pass_send_email"
+    ]
     public_routes_prefix = ["/static/"]
     path = request.url.path
     if path in public_routes_exact:
