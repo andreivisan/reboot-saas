@@ -58,7 +58,7 @@ async def reset_pass_input_email(request: Request):
     return templates.TemplateResponse("/authentication/pages/reset_pass_input_email.html", context)
 
 @router.post("/reset_pass_send_email")
-async def reset_password(request: Request, email: str = Form(...)):
+async def reset_pass_send_email(request: Request, email: str = Form(...)):
     user_data = supabase.table("user_profile").select("*").eq("email", email).execute()
     if not user_data.data:
         logger.warn(f"User with email {email} not found")
@@ -74,6 +74,13 @@ async def reset_password(request: Request, email: str = Form(...)):
         "request": request
     }
     return templates.TemplateResponse("/authentication/pages/reset_password_message.html", context)
+
+@router.get("/reset_password")
+async def reset_password(request: Request):
+    context = {
+        "request": request
+    }
+    return templates.TemplateResponse("/authentication/pages/reset_password.html", context)
 
 @router.post("/register")
 def register(request: Request, email: str = Form(...), password: str = Form(...)):
