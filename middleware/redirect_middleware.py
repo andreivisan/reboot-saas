@@ -8,7 +8,8 @@ async def redirect_middleware(request: Request, call_next):
             "/login", 
             "/register", 
             "/reset_pass_input_email", 
-            "/reset_pass_send_email"
+            "/reset_pass_send_email",
+            "reset_password"
     ]
     public_routes_prefix = ["/static/"]
     path = request.url.path

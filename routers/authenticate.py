@@ -55,8 +55,7 @@ async def reset_pass_input_email(request: Request):
         "request": request,
         "error": False
     }
-    response = templates.TemplateResponse("/authentication/pages/reset_pass_input_email.html", context)
-    return response
+    return templates.TemplateResponse("/authentication/pages/reset_pass_input_email.html", context)
 
 @router.post("/reset_pass_send_email")
 async def reset_password(request: Request, email: str = Form(...)):
@@ -69,8 +68,12 @@ async def reset_password(request: Request, email: str = Form(...)):
         }
         return templates.TemplateResponse("/authentication/pages/reset_pass_input_email.html", context)
     supabase.auth.reset_password_email(email, {
-        "redirect_to": "https://example.com/update-password",
+        "redirect_to": "http://localhost:8000/reset_password",
     })
+    context = {
+        "request": request
+    }
+    return templates.TemplateResponse("/authentication/pages/reset_password_message.html", context)
 
 @router.post("/register")
 def register(request: Request, email: str = Form(...), password: str = Form(...)):
