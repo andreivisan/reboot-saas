@@ -76,12 +76,48 @@ async def reset_pass_send_email(request: Request, email: str = Form(...)):
     return templates.TemplateResponse("/authentication/pages/reset_password_message.html", context)
 
 @router.get("/reset_password")
-async def reset_password(request: Request):
+async def render_reset_password_form(request: Request):
     context = {
         "request": request
     }
     return templates.TemplateResponse("/authentication/pages/reset_password.html", context)
 
+@router.post("/reset_password")
+async def reset_password(request: Request, new_password: str = Form(...), repeat_password: str = Form(...)):
+    # TODO: Use exceptions instead of if - else statement
+    # TODO: Add loggers as it doesn't work
+    if new_password == reset_password:
+        supabase_response = supabase.auth.update_user({
+            "password": new_password
+        })
+        # retrieve tokens from session
+        access_token = response.session.access_token
+        refresh_token = response.session.refresh_token
+        # if login successful redirect to /dashboard
+        # also attach a cookie for each of the tokens
+        redirect_response = RedirectResponse(url="/dashboard", status_code=303)
+        redirect_response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=True,
+            secure=True,
+            samesite="lax"
+        )
+        redirect_response.set_cookie(
+            key="refresh_token",
+            value=refresh_token,
+            httponly=True,
+            secure=True,
+            samesite="lax"
+        )
+        return redirect_response
+    else:
+        context = {
+            "request": request,
+            "error": "Passwords do not match"
+        }
+        return templates.TemplateResponse("/authentication/pages/reset_password.html", context)
+    
 @router.post("/register")
 def register(request: Request, email: str = Form(...), password: str = Form(...)):
     try:
