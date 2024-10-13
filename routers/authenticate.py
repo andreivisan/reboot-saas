@@ -42,7 +42,6 @@ def render_register_form(request: Request):
 async def logout(request: Request, response: Response, user_id: str = Depends(get_current_user)):
     try:
         supabase_response = supabase.auth.sign_out()
-        print(supabase_response)
         redirect_response = RedirectResponse(url="/login", status_code=302)
         redirect_response.delete_cookie("access_token")
         redirect_response.delete_cookie("refresh_token")
