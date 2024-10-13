@@ -1,6 +1,6 @@
 import json
 from fastapi import APIRouter, Depends, Form, Request, Response, HTTPException
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from gotrue.errors import AuthApiError
 from . import templates
 from . import logger
@@ -40,14 +40,21 @@ def render_register_form(request: Request):
 
 @router.get("/logout", response_class=HTMLResponse)
 async def logout(request: Request, response: Response, user_id: str = Depends(get_current_user)):
-    supabase_response = supabase.auth.sign_out()
-    context = {
-        "request": request
-    }
-    response = templates.TemplateResponse("/authentication/pages/login_form.html", context)
-    response.delete_cookie("access_token")
-    response.delete_cookie("refresh_token")
-    return response
+    try:
+        supabase_response = supabase.auth.sign_out()
+        print(supabase_response)
+        redirect_response = RedirectResponse(url="/login", status_code=302)
+        redirect_response.delete_cookie("access_token")
+        redirect_response.delete_cookie("refresh_token")
+        logger.info(f"User {user_id} logged out successfully")
+        return redirect_response
+    except Exception as e:
+        logger.error(f"Logout failed for user {user_id}: {str(e)}")
+        error_message = "An unexpected error occurred during logout"
+        return JSONResponse(
+            status_code=500,
+            content={"error": error_message}
+        ) 
 
 @router.get("/reset_pass_input_email")
 async def reset_pass_input_email(request: Request):
