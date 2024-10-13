@@ -1,10 +1,10 @@
 import json
-from fastapi import APIRouter, Depends, Form, Request, Response
+from fastapi import APIRouter, Depends, Form, Request, Response, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from gotrue.errors import AuthApiError
 from . import templates
 from . import logger
-from . import supabase
+from . import supabase, admin_auth_client
 from models.authentication.user import User
 from security.utils import get_current_user
 
@@ -91,42 +91,23 @@ async def reset_password(
     if new_password != repeat_password:
         raise HTTPException(status_code=400, detail="Passwords do not match")
     try:
-        user = supabase.auth.get_user(access_token)
-        print(user)
+        data = supabase.auth.get_user(access_token)
+        user = data.user
+        if not user:
+            raise HTTPException(status_code=400, detail="Invalid access token")
+        admin_auth_client.update_user_by_id(
+            user.id,
+            {"password": new_password}
+        )
+        redirect_response = RedirectResponse(url="/login", status_code=302)
+        return redirect_response
     except Exception as e:
         logger.error(f"Password reset failed: {str(e)}")
-        
-    #     supabase_response = supabase.auth.update_user({
-    #         "password": new_password
-    #     })
-    #     logger.info(f"Supabase response: {supabase_response}")
-        # retrieve tokens from session
-    #     access_token = response.session.access_token
-    #     refresh_token = response.session.refresh_token
-    #     # if login successful redirect to /dashboard
-    #     # also attach a cookie for each of the tokens
-    #     redirect_response = RedirectResponse(url="/dashboard", status_code=303)
-    #     redirect_response.set_cookie(
-    #         key="access_token",
-    #         value=access_token,
-    #         httponly=True,
-    #         secure=True,
-    #         samesite="lax"
-    #     )
-    #     redirect_response.set_cookie(
-    #         key="refresh_token",
-    #         value=refresh_token,
-    #         httponly=True,
-    #         secure=True,
-    #         samesite="lax"
-    #     )
-    #     return redirect_response
-    # else:
-    #     context = {
-    #         "request": request,
-    #         "error": "Passwords do not match"
-    #     }
-    #     return templates.TemplateResponse("/authentication/pages/reset_password.html", context)
+        context = {
+             "request": request,
+             "error": str(e)
+        }
+        return templates.TemplateResponse("/authentication/pages/reset_password.html", context)
     
 @router.post("/register")
 def register(request: Request, email: str = Form(...), password: str = Form(...)):
