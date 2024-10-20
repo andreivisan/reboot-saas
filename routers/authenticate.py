@@ -189,11 +189,6 @@ async def google_auth(request: Request):
         "provider": "google",
         "options": {
             "redirect_to": "http://localhost:8000/auth/google/callback",
-            "query_params": {
-                "response_type": "code",
-                "access_type": "offline",  # Request a refresh token
-                "prompt": "consent"        # Force consent screen to get refresh token
-            }
         }
     })
     response = Response(status_code=200)
@@ -202,4 +197,5 @@ async def google_auth(request: Request):
 
 @router.get("/auth/google/callback")
 async def google_auth_callback(request: Request):
-    return RedirectResponse(url="/dashboard", status_code=302)
+    code = request.query_params.get("code")
+    print(f"************** {code} ***************")
