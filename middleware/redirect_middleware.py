@@ -9,7 +9,9 @@ async def redirect_middleware(request: Request, call_next):
             "/register", 
             "/reset_pass_input_email", 
             "/reset_pass_send_email",
-            "/reset_password"
+            "/reset_password",
+            "/auth/google",
+            "/auth/google/callback"
     ]
     public_routes_prefix = ["/static/"]
     path = request.url.path
