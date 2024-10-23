@@ -207,7 +207,7 @@ async def google_auth_callback(request: Request):
         "uuid": response.user.id,
         "email": response.user.email
     }
-    supabase.table("user_profile").insert(user_profile).execute()
+    supabase.table("user_profile").upsert(user_profile, on_conflict="uuid").execute()
     logger.info("User successfully registered and saved to DB")
     access_token = response.session.access_token
     refresh_token = response.session.refresh_token
