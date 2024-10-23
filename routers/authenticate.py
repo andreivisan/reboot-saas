@@ -198,4 +198,32 @@ async def google_auth(request: Request):
 @router.get("/auth/google/callback")
 async def google_auth_callback(request: Request):
     code = request.query_params.get("code")
-    print(f"************** {code} ***************")
+    if not code:
+        raise HTTPException(status_code=400, detail="Authorization code not found.")
+    response = supabase.auth.exchange_code_for_session({"auth_code": code})
+    if not response.session:
+        raise HTTPException(status_code=400, detail="Failed to exchange code for session.")
+    user_profile = {
+        "uuid": response.user.id,
+        "email": response.user.email
+    }
+    supabase.table("user_profile").insert(user_profile).execute()
+    logger.info("User successfully registered and saved to DB")
+    access_token = response.session.access_token
+    refresh_token = response.session.refresh_token
+    redirect_response = RedirectResponse(url="/dashboard", status_code=302)
+    redirect_response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=True,
+        samesite="lax"
+    )
+    redirect_response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,
+        secure=True,
+        samesite="lax"
+    )
+    return redirect_response

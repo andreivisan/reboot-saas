@@ -19,6 +19,7 @@ supabase = create_client(
     options=ClientOptions(
         auto_refresh_token=False,
         persist_session=False,
+        flow_type="pkce"
     )
 )
 # Access auth admin api
