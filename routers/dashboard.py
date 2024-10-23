@@ -6,7 +6,7 @@ from . import supabase
 
 router = APIRouter()
 
-@router.get("/dashboard", response_class=HTMLResponse)
+@router.get("/dashboard/home", response_class=HTMLResponse)
 async def home(request: Request, user_id: str = Depends(get_current_user)):
     user_data = supabase.table("user_profile").select("*").eq("uuid", user_id).execute()
     context = {

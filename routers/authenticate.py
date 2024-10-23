@@ -36,9 +36,9 @@ def login(request: Request, email: str = Form(...), password: str = Form(...)):
         # retrieve tokens from session
         access_token = response.session.access_token
         refresh_token = response.session.refresh_token
-        # if login successful redirect to /dashboard
+        # if login successful redirect to /dashboard/home
         # also attach a cookie for each of the tokens
-        redirect_response = RedirectResponse(url="/dashboard", status_code=303)
+        redirect_response = RedirectResponse(url="/dashboard/home", status_code=303)
         redirect_response.set_cookie(
             key="access_token",
             value=access_token,
@@ -211,7 +211,7 @@ async def google_auth_callback(request: Request):
     logger.info("User successfully registered and saved to DB")
     access_token = response.session.access_token
     refresh_token = response.session.refresh_token
-    redirect_response = RedirectResponse(url="/dashboard", status_code=302)
+    redirect_response = RedirectResponse(url="/dashboard/home", status_code=302)
     redirect_response.set_cookie(
         key="access_token",
         value=access_token,

@@ -12,12 +12,12 @@
         <div>
             <h3 class="mb-12 text-sm font-semibold text-gray-400" x-show="open">MENU</h3>
             <ul class="flex flex-col space-y-10">
-                <a href="/dashboard" class="block hover:text-sky-400">
+                <a href="/dashboard/home" class="block hover:text-sky-400">
                     <li class="flex items-center" 
                         :class="{
                             'space-x-4 p-2 rounded-sm': open, 
                             'justify-center': !open,
-                            'bg-gray-700': open && isSelected('/dashboard')
+                            'bg-gray-700': open && isSelected('/dashboard/home')
                         }">
                         <svg 
                             xmlns="http://www.w3.org/2000/svg" 
@@ -25,7 +25,7 @@
                             viewBox="0 0 24 24" 
                             stroke-width="2" 
                             stroke="currentColor" 
-                            :stroke="isSelected('/dashboard') ? (open ? 'currentColor' : '#0284c7') : 'currentColor'"
+                            :stroke="isSelected('/dashboard/home') ? (open ? 'currentColor' : '#0284c7') : 'currentColor'"
                             class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
                         </svg>

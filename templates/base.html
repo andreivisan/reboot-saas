@@ -7,10 +7,10 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
 
     <!-- Chart CSS -->
-    <link rel="stylesheet" href="static/css/charts.min.css">
+    <link rel="stylesheet" href="/static/css/charts.min.css">
 
     <!-- Custom Main CSS -->
-    <link rel="stylesheet" href="static/css/main.css">
+    <link rel="stylesheet" href="/static/css/main.css">
 
     <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@2.0.0" integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw" crossorigin="anonymous"></script>
@@ -25,7 +25,18 @@
     {% endblock style %}
 </head>
 
-<body hx-boost="true">
+<body
+    x-data="{
+      currentPath: window.location.pathname,
+      isSelected(path) {
+          return this.currentPath === path;
+      }
+    }"
+    x-on:htmx:afterOnLoad="currentPath = window.location.pathname"
+    x-on:htmx:historyRestore="currentPath = window.location.pathname"
+    x-on:popstate="currentPath = window.location.pathname"
+    hx-boost="true">
+    
     {% block header %}
     {% endblock header %}
 
