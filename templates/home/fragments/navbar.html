@@ -32,8 +32,15 @@
             <li><a href="#faqs">FAQs</a></li>
         </ul>
     </div>
-    <div class="navbar-end gap-x-4">
-        <a hx-get="/login" hx-target="body" hx-swap="innerHTML" hx-push-url="true" class="cursor-pointer hover:text-sky-600">Sign In</a>
-        <a hx-get="/register" hx-target="body" hx-swap="innerHTML" hx-push-url="true" class="btn bg-sky-600 hover:bg-sky-500 text-white">Sign Up</a>
-    </div>
+    {% if not is_authenticated %}
+        <div class="navbar-end gap-x-4">
+            <a hx-get="/login" hx-target="body" hx-swap="innerHTML" hx-push-url="true" class="cursor-pointer hover:text-sky-600">Sign In</a>
+            <a hx-get="/register" hx-target="body" hx-swap="innerHTML" hx-push-url="true" class="btn bg-sky-600 hover:bg-sky-500 text-white">Sign Up</a>
+        </div>
+    {% endif %}
+    {% if is_authenticated %}
+        <div class="navbar-end gap-x-4">
+            <a hx-get="/dashboard" hx-target="body" hx-swap="innerHTML" hx-push-url="true" class="cursor-pointer hover:text-sky-600">Dashboard</a>
+        </div>
+    {% endif %}
 </div>

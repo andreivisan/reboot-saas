@@ -8,7 +8,8 @@ router = APIRouter()
 @router.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     context = {
-            "request": request
+            "request": request,
+            "is_authenticated": request.cookies.get("access_token") is not None
     }
     response = templates.TemplateResponse("/home/pages/home.html", context)
     return response
