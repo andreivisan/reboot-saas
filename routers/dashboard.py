@@ -26,3 +26,12 @@ async def profile(request: Request, user_id: str = Depends(get_current_user)):
     response = templates.TemplateResponse("/dashboard/fragments/dashboard_profile.html", context)
     return response
 
+@router.get("/dashboard/account_settings", response_class=HTMLResponse)
+async def account_settings(request: Request, user_id: str = Depends(get_current_user)):
+    user_data = supabase.table("user_profile").select("*").eq("uuid", user_id).execute()
+    context = {
+        "request": request,
+        "user_data": user_data.data[0]
+    }
+    response = templates.TemplateResponse("/dashboard/fragments/dashboard_account_settings.html", context)
+    return response
