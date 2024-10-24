@@ -13,7 +13,7 @@ async def home(request: Request, user_id: str = Depends(get_current_user)):
             "request": request,
             "user_data": user_data.data[0]
     }
-    response = templates.TemplateResponse("/dashboard/pages/dashboard_home.html", context)
+    response = templates.TemplateResponse("/dashboard/fragments/dashboard_home_content.html", context)
     return response
 
 @router.get("/dashboard/profile", response_class=HTMLResponse)

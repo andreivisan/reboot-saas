@@ -13,7 +13,8 @@
     <div class="ml-16 w-full">
         {% include 'dashboard/fragments/dashboard_navbar.html' %}
         <div id="dashboard-content" class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-            {% include 'dashboard/fragments/dashboard_home_content.html' %}
+            {% block dashboard_content %}
+            {% endblock dashboard_content %}
         </div>
     </div>
 </div>
